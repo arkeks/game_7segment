@@ -1,0 +1,10 @@
+*.bak
+*.vh
+*.cdf
+*.done
+*.rpt
+
+simulation/
+db/
+incremental_db/
+output_files/

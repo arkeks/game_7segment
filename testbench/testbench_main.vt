@@ -1,0 +1,92 @@
+// testbench for testing whole device;
+// the sync and debounce module must be commented in top module,
+// because we have ideal signals from buttons in simulation
+
+`timescale 1ns / 1ps
+module testbench_main;
+	
+	// inputs
+	reg       clk;
+	reg       reset;
+	reg [3:0] key;
+	
+	//outputs
+	wire [3:0] letter0;
+	wire [3:0] letter1;
+	wire [3:0] letter2;
+	wire [3:0] letter3;
+	wire [2:0] state;
+	wire       letter_strobe_out;
+	wire       end_flag;
+	wire [7:0] abcdefgh;
+   wire [3:0] digit;
+   wire       buzzer;
+   wire [3:0] led;
+	
+	
+	
+	wire       reset_n = ~reset;
+	wire [3:0] key_n = ~key;
+	
+	top dut (
+		clk,
+		reset_n,
+		key_n,
+		
+		letter0,
+		letter1,
+		letter2,
+		letter3,
+		state,
+		letter_strobe_out,
+		end_flag,
+		
+		abcdefgh,
+		digit,
+		buzzer,
+		led
+		);
+		
+		initial
+		begin
+			reset = 1'b1;
+			clk   = 1'b1;
+			key   = 4'b0000;
+			#1
+			reset = 1'b0;
+			#5;
+			key = 4'b1000;
+			#6;
+			key = 4'b0000;
+			#122;
+			key = 4'b0100;
+			#6;
+			key = 4'b0000;
+			#123;
+			key = 4'b0010;
+			#6;
+			key = 4'b0000;
+			#121;
+			key = 4'b0001;
+			#30;
+			key = 4'b0011;
+			#5
+			key = 4'b0000;
+			#1;
+		end
+		
+		
+		
+	initial
+		begin
+			$monitor("key=%b, state=%d", key, state);
+			$dumpvars;
+			#450
+			$finish;
+		end
+			
+	always begin
+		#1 clk = ~clk;
+	end
+		
+endmodule
